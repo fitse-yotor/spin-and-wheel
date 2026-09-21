@@ -1,0 +1,171 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  /* Terminal (display + POS) */
+  --color-night: #0b0c0e;
+  --color-panel: #14171b;
+  --color-panel2: #1b1f25;
+  --color-line: #2a2f37;
+  --color-mute: #8a93a0;
+  --color-amber: #f2b01e;
+  --color-go: #2bc56d;
+  --color-stop: #f0483e;
+  --color-info: #4aa3df;
+
+  /* Back office */
+  --color-paper: #f3f4f5;
+  --color-card: #ffffff;
+  --color-rule: #dadde1;
+  --color-ink: #16191e;
+  --color-soft: #5b6470;
+  --color-brand: #9a6b00;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+button {
+  cursor: pointer;
+  font: inherit;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+input,
+select,
+textarea {
+  font: inherit;
+}
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
+
+/* Game display scales with the screen so it looks identical on 1080p, 4K and odd panels. */
+html.display-mode {
+  font-size: calc(min(100vh, 100vw * 0.5625) / 67.5);
+  cursor: none;
+  overflow: hidden;
+}
+html.display-mode.show-cursor {
+  cursor: default;
+}
+
+@keyframes pulse-ring {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.blink {
+  animation: pulse-ring 1s ease-in-out infinite;
+}
+@keyframes pop-in {
+  from {
+    transform: scale(0.86);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.pop-in {
+  animation: pop-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+/* Thermal receipt printing: only the receipt is printed, at 80mm paper width. */
+.receipt-sheet {
+  width: 80mm;
+  background: #fff;
+  color: #000;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.35;
+  padding: 4mm 3mm;
+}
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible !important;
+  }
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+/* ── Customer display: casino felt theme ─────────────────────────────────── */
+.felt {
+  background:
+    radial-gradient(ellipse at 50% 45%, #14943f 0%, #0d7332 52%, #094d22 100%);
+}
+.tv-panel {
+  background: #0a5526;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.35);
+}
+.tv-head {
+  background: linear-gradient(#2f9c4c, #1b7a36);
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0.1rem 0.15rem rgba(0, 0, 0, 0.5);
+}
+.tv-cell {
+  background: #073d1a;
+}
+.chip-red { background: #c8161d; }
+.chip-black { background: #14161a; }
+.chip-green { background: #25a244; }
+
+/* ── Cashier terminal: light theme (variables re-mapped so shared pieces follow) ── */
+.cashier {
+  --color-night: #ffffff;
+  --color-panel: #ffffff;
+  --color-panel2: #efefef;
+  --color-line: #c9c9c9;
+  --color-mute: #666666;
+  --color-amber: #d98200;
+  --color-go: #1f9d4d;
+  --color-stop: #c62828;
+  --color-info: #1e6fb3;
+  --color-ink: #1e1e1e;
+  color: #1e1e1e;
+}
+
+/* ── Dog race ───────────────────────────────────────────────────────────── */
+@keyframes gallop-a { 0%, 100% { transform: rotate(-42deg); } 50% { transform: rotate(42deg); } }
+@keyframes gallop-b { 0%, 100% { transform: rotate(42deg); } 50% { transform: rotate(-42deg); } }
+@keyframes body-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3%); } }
+.dog .leg-a, .dog .leg-b { transform-box: fill-box; transform-origin: 50% 5%; animation-duration: 0.36s; animation-timing-function: ease-in-out; animation-iteration-count: infinite; animation-play-state: paused; }
+.dog .leg-a { animation-name: gallop-a; }
+.dog .leg-b { animation-name: gallop-b; }
+.dog .bob { animation: body-bob 0.36s ease-in-out infinite; animation-play-state: paused; }
+.dog.running .leg-a, .dog.running .leg-b, .dog.running .bob { animation-play-state: running; }
+.sand-lane { background: #c9a56b; }
+.sand-lane:nth-child(even) { background: #c19c60; }
+@keyframes flag-in { from { transform: translateY(-1rem); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.place-badge { animation: flag-in 0.3s ease-out both; }

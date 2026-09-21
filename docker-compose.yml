@@ -1,0 +1,26 @@
+# Central server: the app behind an nginx TLS terminator.
+# Put your certificate and key in deploy/certs/ (fullchain.pem, privkey.pem) before `docker compose up -d`.
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      # Set these. Without JWT_SECRET/DATA_KEY the server generates keys and keeps them in the database.
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
+      DATA_KEY: ${DATA_KEY:?set DATA_KEY}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?set SEED_ADMIN_PASSWORD}
+      SERVER_ID: ${SERVER_ID:-srv-1}
+      DISPLAY_KEY: ${DISPLAY_KEY:-}
+    volumes:
+      - spinwheel-data:/data
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on: [app]
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./deploy/proxy.inc:/etc/nginx/conf.d/proxy.inc:ro
+      - ./deploy/certs:/etc/nginx/certs:ro
+volumes:
+  spinwheel-data:

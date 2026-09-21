@@ -1,0 +1,10 @@
+{
+  "description": "Engage in a fun and interactive spin and wheel game designed for browsers, perfect for parties and events to add excitement and entertainment.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
